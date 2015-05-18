@@ -63,7 +63,7 @@ int versionNumber() nothrow
 
 /++
 Tells whether SQLite was compiled with the thread-safe options.
-    
+
 See_also: ($LINK http://www.sqlite.org/c3ref/threadsafe.html).
 +/
 bool threadSafe() nothrow
@@ -74,14 +74,14 @@ bool threadSafe() nothrow
 /// Initializes or shuts down SQLite.
 void initialize()
 {
-    auto result = sqlite3_initialize(); 
+    auto result = sqlite3_initialize();
     enforce(result == SQLITE_OK,
             new SqliteException("Initialization: error %s".format(result)));
 }
 /// Ditto
 void shutdown()
 {
-    auto result = sqlite3_shutdown(); 
+    auto result = sqlite3_shutdown();
     enforce(result == SQLITE_OK,
             new SqliteException("Shutdown: error %s".format(result)));
 }
@@ -94,7 +94,7 @@ See_Also: $(LINK http://www.sqlite.org/c3ref/config.html).
 +/
 void config(Args...)(int code, Args args)
 {
-    auto result = sqlite3_config(code, args); 
+    auto result = sqlite3_config(code, args);
     enforce(result == SQLITE_OK,
             new SqliteException("Configuration: error %s".format(result)));
 }
@@ -121,7 +121,7 @@ else
     unittest
     {
         config(SQLITE_CONFIG_MULTITHREAD);
-        config(SQLITE_CONFIG_LOG, 
+        config(SQLITE_CONFIG_LOG,
                function(void* p, int code, const(char*) msg) {}, null);
         initialize();
     }
@@ -426,7 +426,7 @@ public:
                                           null);
         enforce(ret == SQLITE_OK,
                 new SqliteException("Could load extension: %s:%s",
-                    .format(entryPoint, path)));        
+                    .format(entryPoint, path)));
     }
 
     /++
@@ -803,7 +803,7 @@ public:
     Registers a delegate as the database's commit or rollback hook.
     Any previously set hook is released.
 
-    Params:        
+    Params:
         hook = For the commit hook, a delegate that should return 0 if the operation must be
         aborted or another value if it can continue.
 
@@ -853,7 +853,7 @@ public:
     Sets the progress handler.
     Any previously set handler is released.
 
-    Params:        
+    Params:
         pace = The approximate number of virtual machine instructions that are
         evaluated between successive invocations of the handler.
 
@@ -1111,10 +1111,10 @@ public:
                 result = sqlite3_bind_null(p.handle, index);
             else
             {
-				static if (isStaticArray!U)
-                	auto bytes = cast(ubyte[]) value.dup;
-				else
-					auto bytes = cast(ubyte[]) value;
+                static if (isStaticArray!U)
+                    auto bytes = cast(ubyte[]) value.dup;
+                else
+                    auto bytes = cast(ubyte[]) value;
                 result = sqlite3_bind_blob(p.handle,
                                            index,
                                            bytes.ptr,
@@ -1245,7 +1245,7 @@ public:
         if (p.handle)
             return sqlite3_bind_parameter_index(p.handle, name.toStringz);
         else
-            return 0;        
+            return 0;
     }
 }
 
@@ -1532,7 +1532,7 @@ struct Row
 
     Returns:
         A value of type T. The returned value is T.init if the data type is NULL.
-        In all other cases, the data is fetched from SQLite (which returns a value 
+        In all other cases, the data is fetched from SQLite (which returns a value
         depending on its own conversion rules;
         see $(LINK http://www.sqlite.org/c3ref/column_blob.html) and
         $(LINK http://www.sqlite.org/lang_expr.html#castexpr)), and it is converted
@@ -1628,17 +1628,17 @@ struct Row
     /// Ditto
     string columnTableName(int index)
     {
-        return sqlite3_column_database_name(statement, internalIndex(index)).to!string;   
+        return sqlite3_column_database_name(statement, internalIndex(index)).to!string;
     }
     /// Ditto
     string columnTableName(string columnName)
     {
-        return columnTableName(indexForName(columnName)); 
+        return columnTableName(indexForName(columnName));
     }
     /// Ditto
     string columnOriginName(int index)
     {
-        return sqlite3_column_origin_name(statement, internalIndex(index)).to!string;   
+        return sqlite3_column_origin_name(statement, internalIndex(index)).to!string;
     }
     /// Ditto
     string columnOriginName(string columnName)
@@ -1673,7 +1673,7 @@ private:
             if (sqlite3_column_name(statement, i).to!string == name)
                 return i;
 
-        throw new SqliteException("invalid column name: '%s'".format(name));        
+        throw new SqliteException("invalid column name: '%s'".format(name));
     }
 }
 
@@ -1899,7 +1899,7 @@ unittest // Getting blob values
     ubyte[] array = [1, 2, 3];
     statement.bind(1, array);
     statement.execute();
-	statement.reset;
+    statement.reset;
     ubyte[3] sarray = [1, 2, 3];
     statement.bind(1, sarray);
     statement.execute();
@@ -1923,12 +1923,12 @@ unittest // Getting null values
     auto results = db.execute("SELECT * FROM test");
     assert(results.front.peek!bool(0) == false);
     assert(results.front.peek!long(0) == 0);
-    assert(results.front.peek!double(0).isnan);
+    assert(results.front.peek!double(0).isNaN);
     assert(results.front.peek!string(0) is null);
     assert(results.front.peek!(ubyte[])(0) is null);
     assert(results.front[0].as!bool == false);
     assert(results.front[0].as!long == 0);
-    assert(results.front[0].as!double.isnan);
+    assert(results.front[0].as!double.isNaN);
     assert(results.front[0].as!string is null);
     assert(results.front[0].as!(ubyte[]) is null);
 }
@@ -2194,7 +2194,7 @@ unittest
 
 struct DelegateWrapper(T)
 {
-    T dlg; 
+    T dlg;
 }
 
 void* delegateWrap(T)(T dlg)
@@ -2320,7 +2320,7 @@ private static string block_read_values(size_t n, string name, PT...)()
                     n = sqlite3_value_bytes(argv[@{index}]);
                     blob.length = n;
                     memcpy(blob.ptr, sqlite3_value_blob(argv[@{index}]), n);
-                    args[@{index}] = to!(PT[@{index}])(blob.dup);                    
+                    args[@{index}] = to!(PT[@{index}])(blob.dup);
                 }
             };
         else
