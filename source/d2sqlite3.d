@@ -1805,6 +1805,8 @@ struct ColumnData
     +/
     auto as(T)(T defaultValue = T.init)
     {
+        import std.traits : isNumeric;
+
         if (!variant.hasValue)
             return defaultValue;
 
@@ -2060,6 +2062,8 @@ Turns $(D_PARAM value) into a _literal that can be used in an SQLite expression.
 +/
 string literal(T)(T value)
 {
+    import std.traits : isNumeric;
+
     static if (is(T == typeof(null)))
         return "NULL";
     else static if (isBoolean!T)
